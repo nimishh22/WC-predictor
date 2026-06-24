@@ -1,6 +1,9 @@
+from pathlib import Path
+
 import pandas as pd
 
-df = pd.read_csv("results.csv")
+DATA_FILE = Path(__file__).resolve().parent / "results.csv"
+df = pd.read_csv(DATA_FILE)
 important = [
     'FIFA World Cup',
     'FIFA World Cup qualification',
@@ -16,7 +19,7 @@ important = [
 df_filtered = df[df["tournament"].isin(important)].copy()
 df_filtered["date"] = pd.to_datetime(df_filtered["date"])
 df_filtered = df_filtered[df_filtered["date"].dt.year >= 2014]
-df_filterted = df_filterted.sort_values("date")
+df_filtered = df_filtered.sort_values("date")
 print(df_filtered.shape)
 print(df_filtered.head(10))
 print(df_filtered["tournament"].value_counts())
@@ -31,3 +34,18 @@ def get_result(row):
     
 df_filtered["result"] = df_filtered.apply(get_result, axis=1)
 print(df_filtered[["home_team", "away_team", "home_score", "away_score", "result"]].head(10))
+
+
+def get_recent_form(team, match_date):
+    match_date = pd.to_datetime(match_date)
+    team_matches = df_filtered[
+        (
+            (df_filtered["home_team"] == team)
+            | (df_filtered["away_team"] == team)
+        )
+        & (df_filtered["date"] < match_date)
+    ]
+    print(len(team_matches))
+
+
+get_recent_form("Brazil", "2022-11-23")
