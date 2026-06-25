@@ -46,6 +46,8 @@ def get_recent_form(team, match_date):
         & (df_filtered["date"] < match_date)
     ]
     print(len(team_matches))
-
-
+    recent_matches = team_matches.tail(10)
+    points = 0
+    print (recent_matches[["date", "home_team", "away_team", "result"]])
 get_recent_form("Brazil", "2022-11-23")
+
