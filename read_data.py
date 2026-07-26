@@ -82,4 +82,29 @@ for _, row in  df_filtered.iterrows():
 df_filtered["home_form"] = home_forms
 df_filtered["away_form"] = away_forms
 
-print(df_filtered.iloc[3000:3005]) 
+#print (df_filtered.iloc[3000:3010])
+
+def average_goals_scored(team, match_date):
+    match_date = pd.to_datetime(match_date)
+
+    team_matches = df_filtered[
+        (
+            (df_filtered["home_team"] == team)
+            | (df_filtered["away_team"] == team)
+        )
+        & (df_filtered["date"] < match_date)
+    ]
+    recent_matches = team_matches.tail(10)
+    total_goals = 0
+
+    for _, row in recent_matches.iterrows():
+        if row["home_team"] == team:
+            team_goals = row["home_score"]
+        else:
+            team_goals = row["away_score"]
+
+        total_goals += team_goals
+
+    return total_goals / 10 
+
+print(average_goals_scored("Argentina", "2026-4-7"))
