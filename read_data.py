@@ -107,4 +107,29 @@ def average_goals_scored(team, match_date):
 
     return total_goals / 10 
 
-print(average_goals_scored("Argentina", "2026-4-7"))
+#print(average_goals_scored("Argentina", "2026-4-7"))
+
+def average_goals_conceded(team,match_date):
+    match_date = pd.to_datetime(match_date)
+
+    team_matches = df_filtered[
+
+        (
+            (df_filtered["home_team"] == team)
+            | (df_filtered["away_team"] == team)
+        )
+        &(df_filtered["date"] < match_date)
+    ]
+    recent_matches = team_matches.tail(10)
+    total_goals = 0
+
+    for _, row in recent_matches.iterrows():
+        if row["home_team"] == team:
+            goals_conceded = row["away_score"]
+        else:
+            goals_conceded = row["home_score"]
+
+        total_goals += goals_conceded
+    return total_goals / 10 
+
+#print(average_goals_conceded("Brazil", "2022-11-20"))
