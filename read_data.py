@@ -2,6 +2,10 @@ from pathlib import Path
 
 import pandas as pd
 
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
 DATA_FILE = Path(__file__).resolve().parent / "results.csv"
 df = pd.read_csv(DATA_FILE)
 important = [
@@ -134,4 +138,91 @@ def average_goals_conceded(team,match_date):
 
 #print(average_goals_conceded("Brazil", "2022-11-20"))
 
-print(df_filtered["tournament"].value_counts())
+ # Create average goals features
+
+home_goals_scored = []
+away_goals_scored = []
+
+home_goals_conceded = []
+away_goals_conceded = []
+
+for _, row in df_filtered.iterrows():
+
+    home_goals_scored.append(
+        average_goals_scored(
+            row["home_team"],
+            row["date"]
+        )
+    )
+
+    away_goals_scored.append(
+        average_goals_scored(
+            row["away_team"],
+            row["date"]
+        )
+    )
+
+    home_goals_conceded.append(
+        average_goals_conceded(
+            row["home_team"],
+            row["date"]
+        )
+    )
+
+    away_goals_conceded.append(
+        average_goals_conceded(
+            row["away_team"],
+            row["date"]
+        )
+    )
+
+df_filtered["home_avg_goals_scored"] = home_goals_scored
+df_filtered["away_avg_goals_scored"] = away_goals_scored
+
+df_filtered["home_avg_goals_conceded"] = home_goals_conceded
+df_filtered["away_avg_goals_conceded"] = away_goals_conceded
+
+tournament_dummies = pd.get_dummies(df_filtered["tournament"], dtype=int)
+df_filtered = pd.concat([df_filtered, tournament_dummies], axis=1)
+df_filtered = df_filtered.drop(columns=["tournament"])
+
+features = [
+    "home_form",
+    "away_form",
+    "home_avg_goals_scored",
+    "away_avg_goals_scored",
+    "home_avg_goals_conceded",
+    "away_avg_goals_conceded",
+    "neutral",
+    "AFC Asian Cup",
+    "African Cup of Nations",
+    "Confederations Cup",
+    "Copa América",
+    "FIFA World Cup",
+    "FIFA World Cup qualification",
+    "Friendly",
+    "UEFA Euro",
+    "UEFA Euro qualification"
+]
+
+X = df_filtered[features]
+
+y = df_filtered["result"]
+
+print(X.head())
+print(y.head())
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
+)
+model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+accuracy = accuracy_score(y_test, predictions)
+print(f"Accuracy: {accuracy:.2%}")
