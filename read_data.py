@@ -133,3 +133,5 @@ def average_goals_conceded(team,match_date):
     return total_goals / 10 
 
 #print(average_goals_conceded("Brazil", "2022-11-20"))
+
+print(df_filtered["tournament"].value_counts())
