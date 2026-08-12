@@ -1,10 +1,14 @@
-# International Football Match Predictor
+# Predictive Intelligence Engine
 
-A machine-learning project for predicting international football match outcomes from historical match data.
+A machine-learning system for probabilistic outcome prediction using historical data, statistical feature engineering, and ensemble learning.
+
+> **Current application:** International football match prediction.
 
 ## Overview
 
-The project currently builds a baseline prediction pipeline using historical international matches from 2014 onward. It engineers pre-match team features and trains a Random Forest classifier to predict:
+The project builds a predictive pipeline from historical international match data. It engineers pre-match features and trains a Random Forest classifier to estimate match outcomes.
+
+Current target classes:
 
 - **1** — Home win
 - **0** — Draw
@@ -24,7 +28,7 @@ The current baseline uses a `RandomForestClassifier` from scikit-learn with 100 
 
 **Baseline accuracy:** 50.67%
 
-This is an initial benchmark rather than the final model. Future versions will test additional football-specific features and probability-based predictions.
+This is an initial benchmark, not the final model. Future versions will introduce additional statistical and team-strength features, probability-based predictions, and improved evaluation methodology.
 
 ## Tech Stack
 
@@ -38,12 +42,13 @@ This is an initial benchmark rather than the final model. Future versions will t
 - [ ] Add win/draw/loss probability predictions
 - [ ] Add Elo/team-strength features
 - [ ] Add head-to-head features
+- [ ] Add goal-difference and streak features
 - [ ] Improve model evaluation with time-aware testing
-- [ ] Build a prediction interface
+- [ ] Build a user-facing prediction interface
 - [ ] Deploy the application
 
 ## Project Status
 
-**Version 1 — Baseline model**
+**Version 1 — Baseline predictive model**
 
-The project is actively being developed, with model improvements and a user-facing interface planned for future versions.
+The system is actively being developed. The long-term goal is to build a robust, interpretable prediction engine with a polished user-facing interface.
